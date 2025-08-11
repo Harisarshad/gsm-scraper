@@ -1,13 +1,14 @@
 <h3>Brands</h3>
 <div class="grid cols-3">
   <% brands.forEach(b => { %>
-    <div class="card">
+    <div class="card" data-brand="<%= encodeURIComponent(b.slug) %>">
       <div style="font-weight:600"><%= b.name %></div>
       <div class="muted"><%= b.count %></div>
       <div class="row">
         <a class="btn" href="/brands/<%= encodeURIComponent(b.slug) %>">Explore</a>
         <button class="btn bulk-brand" data-brand="<%= encodeURIComponent(b.slug) %>">Bulk Insert (All Pages)</button>
       </div>
+      <div class="brand-status" id="status-<%= encodeURIComponent(b.slug) %>"></div>
     </div>
   <% }) %>
 </div>
@@ -16,3 +17,33 @@
   <h4>Bulk Insert Progress</h4>
   <div id="log">Click a "Bulk Insert" button to start…</div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.bulk-brand').forEach(btn => {
+    btn.addEventListener('click', async function(e) {
+      e.preventDefault(); // <-- Prevent default action (page reload)
+      const brand = this.dataset.brand;
+      const statusDiv = document.getElementById('status-' + brand);
+      const log = document.getElementById('log');
+      statusDiv.textContent = 'Inserting...';
+      log.textContent = 'Starting bulk insert for ' + decodeURIComponent(brand) + '...';
+
+      try {
+        const res = await fetch(`/api/bulk-insert/${brand}`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          statusDiv.textContent = `✅ Done (${data.inserted} models)`;
+          log.textContent = `Done! Inserted ${data.inserted} models for ${decodeURIComponent(brand)}.`;
+        } else {
+          statusDiv.textContent = '❌ Error';
+          log.textContent = 'Error: ' + (data.error || 'Unknown error');
+        }
+      } catch (e) {
+        statusDiv.textContent = '❌ Request failed';
+        log.textContent = 'Request failed: ' + e.message;
+      }
+    });
+  });
+});
+</script>

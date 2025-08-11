@@ -1,14 +1,13 @@
-
 <h3><%= brandName %> — Models (page <%= pageIndex %>)</h3>
 
 <div class="row" style="margin-bottom:12px;">
-  <a class="btn" href="/brands/<%= encodeURIComponent(brandSlug) %>/bulk">Bulk Insert All Pages</a>
+  <button class="btn" id="bulk-insert-btn" data-brand="<%= encodeURIComponent(brandSlug) %>">Bulk Insert All Pages</button>
   <a class="btn" href="/brands">Back to brands</a>
 </div>
 
 <div class="grid cols-3">
   <% models.forEach(m => { %>
-    <div class="card">
+    <div class="card" data-model="<%= encodeURIComponent(m.slug) %>">
       <div style="display:flex; gap:10px; align-items:center;">
         <% if (m.image) { %><img src="<%= m.image %>" alt="" width="60" /><% } %>
         <div>
@@ -19,6 +18,7 @@
       <div style="margin-top:10px; display:flex; gap:10px;">
         <a class="btn" href="/phones/insert/<%= encodeURIComponent(m.slug) %>">Insert</a>
         <a class="btn" href="<%= m.url %>" target="_blank">View</a>
+        <span class="model-status" id="status-<%= encodeURIComponent(m.slug) %>"></span>
       </div>
     </div>
   <% }) %>
@@ -39,5 +39,35 @@
 </section>
 
 <script>
-  // wire bulk button on this page as well (navigates to /bulk which sets up SSE page)
+document.addEventListener('DOMContentLoaded', function() {
+  const btn = document.getElementById('bulk-insert-btn');
+  if (!btn) return;
+  const log = document.getElementById('log');
+  const modelCards = document.querySelectorAll('.card[data-model]');
+  btn.addEventListener('click', async function() {
+    btn.disabled = true;
+    log.textContent = 'Bulk inserting models...';
+    let done = 0;
+    for (const card of modelCards) {
+      const slug = card.getAttribute('data-model');
+      const status = document.getElementById('status-' + slug);
+      status.textContent = '⏳';
+      try {
+        const res = await fetch(`/phones/insertNew/${slug}`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          status.textContent = '✅';
+        } else {
+          status.textContent = '❌';
+        }
+      } catch (e) {
+        status.textContent = '❌';
+      }
+      done++;
+      log.textContent = `Inserted ${done} of ${modelCards.length} models...`;
+    }
+    log.textContent = `✅ Done! Inserted ${done} models.`;
+    btn.disabled = false;
+  });
+});
 </script>

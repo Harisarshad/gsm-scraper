@@ -159,6 +159,7 @@ export async function getPhoneDetails(phoneSlug) {
 
     const html = await page.content();
     const $ = cheerio.load(html);
+    await fs.writeFile('debug-models-details.html', html);
 
     const title = $('h1.specs-phone-name-title').first().text().trim();
     const imageUrl = $('#specs-cp img').first().attr('src') || null;

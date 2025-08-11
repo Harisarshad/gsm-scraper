@@ -26,7 +26,7 @@ app.get('/', (req, res) => res.redirect('/brands'));
 app.get('/brands', async (req, res, next) => {
   try {
     const brands = await getBrands();
-        console.log('brands count:', brands?.length, brands?.slice(0, 3));
+      //  console.log('brands count:', brands?.length, brands?.slice(0, 3));
 
     res.render('brands', { brands, title: 'Brands' });
   } catch (e) {
@@ -66,6 +66,16 @@ app.get('/phones/insert/:phoneSlug', async (req, res, next) => {
   }
 });
 
+app.post('/phones/insertNew/:phoneSlug', async (req, res) => {
+  try {
+    const phoneSlug = req.params.phoneSlug;
+    const { data } = await getPhoneDetails(phoneSlug);
+    upsertPhone(phoneSlug, data);
+    res.json({ success: true, slug: phoneSlug });
+  } catch (e) {
+    res.json({ success: false, error: e.message });
+  }
+});
 // Bulk insert helper page (optional)
 app.get('/brands/:brandSlug/bulk', (req, res) => {
   // Just redirect to /brands where the SSE UI is present
