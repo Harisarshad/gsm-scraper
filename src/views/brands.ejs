@@ -1,0 +1,18 @@
+<h3>Brands</h3>
+<div class="grid cols-3">
+  <% brands.forEach(b => { %>
+    <div class="card">
+      <div style="font-weight:600"><%= b.name %></div>
+      <div class="muted"><%= b.count %></div>
+      <div class="row">
+        <a class="btn" href="/brands/<%= encodeURIComponent(b.slug) %>">Explore</a>
+        <button class="btn bulk-brand" data-brand="<%= encodeURIComponent(b.slug) %>">Bulk Insert (All Pages)</button>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<section style="margin-top:20px;">
+  <h4>Bulk Insert Progress</h4>
+  <div id="log">Click a "Bulk Insert" button to start…</div>
+</section>

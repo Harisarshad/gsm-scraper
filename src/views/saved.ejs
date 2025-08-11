@@ -1,0 +1,17 @@
+
+<h3>Saved Phones</h3>
+<div class="grid">
+  <% phones.forEach(p => { %>
+    <div class="card">
+      <div style="font-weight:600"><%= p.brandValue %> <%= p.modelValue %></div>
+      <div class="muted"><%= p.slug %> · <%= p.yearValue || '' %></div>
+      <% if (p.articleImage) { %>
+        <img src="<%= p.articleImage %>" alt="" width="100" />
+      <% } %>
+      <details style="margin-top:8px;">
+        <summary>JSON</summary>
+        <pre><%= JSON.stringify(p, null, 2) %></pre>
+      </details>
+    </div>
+  <% }) %>
+</div>

@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title><%= title || 'GSMArena Scraper' %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+      body{font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 24px;}
+      header {display:flex; gap:16px; align-items:center; margin-bottom: 24px;}
+      a {text-decoration:none; color:#0f57ea;}
+      .grid{display:grid; gap:12px;}
+      .grid.cols-3{grid-template-columns: repeat(3,minmax(0,1fr));}
+      .card{border:1px solid #eee; border-radius:12px; padding:12px;}
+      .muted{color:#666; font-size:12px;}
+      .btn{display:inline-block; padding:8px 12px; border:1px solid #0f57ea; border-radius:8px; cursor:pointer;}
+      .btn[disabled]{opacity:.5; cursor: not-allowed;}
+      #log {white-space: pre-wrap; background:#fafafa; border:1px solid #eee; padding:12px; border-radius:8px; max-height: 300px; overflow:auto;}
+      .row{display:flex; gap:12px; align-items:center; flex-wrap: wrap;}
+    </style>
+  </head>
+  <body>
+    <header class="row">
+      <h2 style="margin:0"><a href="/">GSMArena Scraper</a></h2>
+      <nav class="row"><a href="/brands">Brands</a> · <a href="/saved">Saved</a></nav>
+    </header>
+    <main>
+      <%- body %>
+    </main>
+    <script src="/public/app.js"></script>
+  </body>
+</html>

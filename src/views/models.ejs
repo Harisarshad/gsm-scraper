@@ -1,0 +1,43 @@
+
+<h3><%= brandName %> — Models (page <%= pageIndex %>)</h3>
+
+<div class="row" style="margin-bottom:12px;">
+  <a class="btn" href="/brands/<%= encodeURIComponent(brandSlug) %>/bulk">Bulk Insert All Pages</a>
+  <a class="btn" href="/brands">Back to brands</a>
+</div>
+
+<div class="grid cols-3">
+  <% models.forEach(m => { %>
+    <div class="card">
+      <div style="display:flex; gap:10px; align-items:center;">
+        <% if (m.image) { %><img src="<%= m.image %>" alt="" width="60" /><% } %>
+        <div>
+          <div style="font-weight:600"><%= m.title %></div>
+          <div class="muted"><%= m.slug %></div>
+        </div>
+      </div>
+      <div style="margin-top:10px; display:flex; gap:10px;">
+        <a class="btn" href="/phones/insert/<%= encodeURIComponent(m.slug) %>">Insert</a>
+        <a class="btn" href="<%= m.url %>" target="_blank">View</a>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<div style="margin-top:16px;">
+  <% if (pageIndex > 1) { %>
+    <a class="btn" href="/brands/<%= encodeURIComponent(brandSlug) %>?page=<%= pageIndex-1 %>">Prev</a>
+  <% } %>
+  <% if (hasNext) { %>
+    <a class="btn" href="/brands/<%= encodeURIComponent(brandSlug) %>?page=<%= pageIndex+1 %>">Next</a>
+  <% } %>
+</div>
+
+<section style="margin-top:20px;">
+  <h4>Bulk Insert Progress</h4>
+  <div id="log">Use "Bulk Insert All Pages" to start…</div>
+</section>
+
+<script>
+  // wire bulk button on this page as well (navigates to /bulk which sets up SSE page)
+</script>
